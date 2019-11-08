@@ -50,6 +50,9 @@ func connect(serverURL string) error {
 	if err != nil {
 		return err
 	}
+	if len(behaviors) == 0 {
+		return fmt.Errorf("No behavior installed on the robot")
+	}
 	return nil
 }
 
@@ -92,7 +95,7 @@ func stateScanningScreen(w *ui.Window) {
 
 func stateErrorScreen(err error) ui.UpdateFn {
 	return func(w *ui.Window) {
-		w.Label("Connection error", "CC")
+		w.Label("Error", "CC")
 		w.Row(200).Dynamic(1)
 		w.LabelWrap(err.Error())
 	}
