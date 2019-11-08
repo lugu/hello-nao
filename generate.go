@@ -1,3 +1,3 @@
-//go:generate qiloop proxy --idl frame_manager.qi.idl --output frame_manager_proxy.go
+//go:generate qiloop proxy --idl behavior_manager.qi.idl --output behavior_manager_proxy.go
 
 package main

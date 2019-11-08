@@ -59,8 +59,18 @@ func stateScanningScreen(w *ui.Window) {
 		protocol := readField(s.InfoFields, "Protocol", "unknown")
 		robotType := readField(s.InfoFields, "RobotType", "unknown")
 
-		if robotType == "unknown" || protocol == "unknown" {
+		if robotType == "unknown" {
 			continue
+		}
+		if protocol == "unknown" {
+			switch s.Port {
+			case 9559:
+				protocol = "tcp"
+			case 9503, 9443:
+				protocol = "tcps"
+			default:
+				continue
+			}
 		}
 
 		label := fmt.Sprintf("%s: %s (%s)", robotType, s.Host, s.AddrV4)
