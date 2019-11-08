@@ -1,0 +1,7 @@
+package main
+
+interface ALBehaviorManager
+	fn startBehavior(behavior: str) //uid:115
+	fn stopAllBehaviors() //uid:118
+	fn getBehaviorNames() -> Vec<str> //uid:121
+end

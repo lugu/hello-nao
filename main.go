@@ -14,8 +14,8 @@ import (
 )
 
 var (
-	frameManager ALFrameManagerProxy
-	behaviors    []string
+	behaviorManager ALBehaviorManagerProxy
+	behaviors       []string
 
 	servers = []*mdns.ServiceEntry{}
 
@@ -41,12 +41,12 @@ func connect(serverURL string) error {
 		return err
 	}
 
-	frameManager, err = Services(session).ALFrameManager()
+	behaviorManager, err = Services(session).ALBehaviorManager()
 	if err != nil {
 		return err
 	}
 
-	behaviors, err = frameManager.Behaviors()
+	behaviors, err = behaviorManager.GetBehaviorNames()
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,11 @@ func stateBehaviorScreen(w *ui.Window) {
 	for _, b := range behaviors {
 		label := strings.Trim(b, "_Behaviors__animations")
 		if w.ButtonText(label) {
-			err := frameManager.PlayBehavior(b)
+			err := behaviorManager.StopAllBehaviors()
+			if err != nil {
+				state = stateErrorScreen(err)
+			}
+			err = behaviorManager.StartBehavior(b)
 			if err != nil {
 				state = stateErrorScreen(err)
 			}
