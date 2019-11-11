@@ -41,7 +41,10 @@ func connect(serverURL string) error {
 		return err
 	}
 
-	behaviorManager, err = Services(session).ALBehaviorManager()
+	onDisonnect := func(err error) {
+		state = stateErrorScreen(err)
+	}
+	behaviorManager, err = Services(session).ALBehaviorManager(onDisonnect)
 	if err != nil {
 		return err
 	}

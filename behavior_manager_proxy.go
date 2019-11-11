@@ -50,10 +50,15 @@ func MakeALBehaviorManager(sess bus.Session, proxy bus.Proxy) ALBehaviorManagerP
 }
 
 // ALBehaviorManager returns a proxy to a remote service
-func (c Constructor) ALBehaviorManager() (ALBehaviorManagerProxy, error) {
+func (c Constructor) ALBehaviorManager(closer func(error)) (ALBehaviorManagerProxy, error) {
 	proxy, err := c.session.Proxy("ALBehaviorManager", 1)
 	if err != nil {
 		return nil, fmt.Errorf("contact service: %s", err)
+	}
+
+	err = proxy.OnDisconnect(closer)
+	if err != nil {
+		return nil, err
 	}
 	return MakeALBehaviorManager(c.session, proxy), nil
 }
