@@ -41,13 +41,13 @@ func connect(serverURL string) error {
 		return err
 	}
 
-	onDisonnect := func(err error) {
-		state = stateErrorScreen(err)
-	}
-	behaviorManager, err = Services(session).ALBehaviorManager(onDisonnect)
+	behaviorManager, err = ALBehaviorManager(session)
 	if err != nil {
 		return err
 	}
+	behaviorManager.Proxy().OnDisconnect(func(err error) {
+		state = stateErrorScreen(err)
+	})
 
 	behaviors, err = behaviorManager.GetBehaviorNames()
 	if err != nil {
