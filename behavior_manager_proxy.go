@@ -14,6 +14,8 @@ type ALBehaviorManagerProxy interface {
 	StartBehavior(behavior string) error
 	StopAllBehaviors() error
 	GetBehaviorNames() ([]string, error)
+	GetBehaviorsByTag(tag string) ([]string, error)
+	GetTagList() ([]string, error)
 	// Generic methods shared by all objectsProxy
 	bus.ObjectProxy
 	// WithContext can be used cancellation and timeout
@@ -77,6 +79,30 @@ func (p *proxyALBehaviorManager) GetBehaviorNames() ([]string, error) {
 	err := p.Proxy().Call2("getBehaviorNames", args, resp)
 	if err != nil {
 		return ret, fmt.Errorf("call getBehaviorNames failed: %s", err)
+	}
+	return ret, nil
+}
+
+// GetBehaviorsByTag calls the remote procedure
+func (p *proxyALBehaviorManager) GetBehaviorsByTag(tag string) ([]string, error) {
+	var ret []string
+	args := bus.NewParams("(s)", tag)
+	resp := bus.NewResponse("[s]", &ret)
+	err := p.Proxy().Call2("getBehaviorsByTag", args, resp)
+	if err != nil {
+		return ret, fmt.Errorf("call getBehaviorsByTag failed: %s", err)
+	}
+	return ret, nil
+}
+
+// GetTagList calls the remote procedure
+func (p *proxyALBehaviorManager) GetTagList() ([]string, error) {
+	var ret []string
+	args := bus.NewParams("()")
+	resp := bus.NewResponse("[s]", &ret)
+	err := p.Proxy().Call2("getTagList", args, resp)
+	if err != nil {
+		return ret, fmt.Errorf("call getTagList failed: %s", err)
 	}
 	return ret, nil
 }

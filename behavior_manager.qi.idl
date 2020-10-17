@@ -1,6 +1,8 @@
 package main
 
 interface ALBehaviorManager
+        fn getTagList() -> Vec<str> //uid:130
+        fn getBehaviorsByTag(tag: str) -> Vec<str> //uid:125
 	fn startBehavior(behavior: str) //uid:115
 	fn stopAllBehaviors() //uid:118
 	fn getBehaviorNames() -> Vec<str> //uid:121

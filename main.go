@@ -15,7 +15,7 @@ import (
 
 var (
 	behaviorManager ALBehaviorManagerProxy
-	behaviors       []string
+	behaviors       = []string{}
 
 	servers = []*mdns.ServiceEntry{}
 
@@ -49,9 +49,18 @@ func connect(serverURL string) error {
 		state = stateErrorScreen(err)
 	})
 
-	behaviors, err = behaviorManager.GetBehaviorNames()
+	tags, err := behaviorManager.GetTagList()
 	if err != nil {
 		return err
+	}
+	for _, tag := range tags {
+		if len(tag) > 1 && tag[0] == '#' {
+			list, err := behaviorManager.GetBehaviorsByTag(tag)
+			if err != nil {
+				return err
+			}
+			behaviors = append(behaviors, list...)
+		}
 	}
 	if len(behaviors) == 0 {
 		return fmt.Errorf("No behavior installed on the robot")
